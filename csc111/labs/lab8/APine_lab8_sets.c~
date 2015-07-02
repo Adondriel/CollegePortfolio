@@ -1,0 +1,65 @@
+#include "APine_lab8_arrayLists.h"
+
+void listSetCreate(arrayList l)
+{
+	arrayListCreate(l);
+	return;	
+}
+
+int listSetSize (arrayList l)
+{
+	arrayListSize(l);
+	return 1;
+}
+
+boolean listSetIsEmpty(arrayList l)
+{
+	if (arrayListIsEmpty(l))
+	{
+		return TRUE;
+	}
+	return FALSE;
+}
+
+boolean listSetIsFull(arrayList l)
+{
+	if (arrayListIsFull(l))
+	{
+		return TRUE;
+	}
+	return FALSE;
+}
+
+int listSetInsert(int element, arrayList l)
+{
+	if (listSetIsFull)
+	{
+		return -1;
+	}
+	if (arrayListIndexOf(element, l) == -1)
+	{
+		arrayListAdd(element, l);
+		return 0;
+	}
+	return -1;
+}
+
+void listSetDeleteElement(int element, arrayList l)
+{	
+	x = arrayListIndexOf(element, l);
+	if (x != -1)
+	{
+		arrayListRemoveKey(x, l);
+	}
+	return;
+}
+
+void listSetPrint (arrayList l)
+{
+	arrayListPrint(l);
+}
+
+int main (int argc, char* argv[])
+{
+	return 1;
+}

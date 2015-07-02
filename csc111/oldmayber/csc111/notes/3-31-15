@@ -1,0 +1,218 @@
+A C Struct is a composite type
+	- The difference between a struct and an array is that an array's elements must be the same data type
+	- A struct is comparable to a java class with only data members
+Declaration
+	strict [tag]{
+		member_declarations
+	};
+to declare struct variables, precede the variable ids by the struct declaration:
+	struct { 
+		Boolean isEmpty, isFull;
+		int numElements;
+		int stack[SIZE];
+	} intStack1, intStack2;
+Members of a struct are stored sequentially in memory
+each struct has its own name space
+	- members of different struct types can have the same name with no confusion
+	- for example,
+		struct {
+			Boolean isEmpty, isFull;
+			int numElements;
+			int stack[SIZE];
+		} charStack1, charStack2;
+struct variables can be initialized in the same way as arrays.
+	if there are not enough initializers the remaining members are zeroed out
+	if there are too many initializaers a compile-time error occurs.
+	Example:
+		struct {
+			Boolean isEmpty, isFull;
+			int numElements;
+			char stack[SIZE];
+		} charStack1 = {1};
+	thus, 1 -> isEmpty, everything else is 0.
+
+	struct {
+		int a[3];
+		int x, y;
+	} st = {{2,4}, 6, 8};
+		array is the first parts.
+		a -> 2,4,0
+		x -> 6
+		y -> 8
+	if you did not use extra {}, y would be 0 because the array would take the first 3 ints.
+	
+
+To access a member of a struct, use the member of operator: a dot (.)
+	if (!s1.stackFull) {
+		s1.numElements++;
+		set.stack[s1.numElements] = newElement;
+	}
+One struct variable can be assigned to another, unlike arrays:
+	struct {
+		int a[3];
+		int x, y;
+	} st1 = {{2,4}, 6, 8}, st2;
+
+	st2 = st1;
+		
+	Every member value of the rvalue is copied into the corresponding member storage of the lvalue.
+	note: assignment can only be to a compatible struct variable, see next section.
+If using structs in multiple files, as parameters etc, best to declare a named struct type instead of using an anonymous type
+two ways to do this
+	1. Tags
+		- This approach uses the optional tag seen in the declaration syntax.
+		- the tag can then be used to declare variables
+		  but note that a tag i not a type name in the same sense as a type declared using typedef
+		- example:
+			struct intStack {
+				Boolean isEmpty, isFull;
+				int numElements;
+				int stack[SIZE];
+			};
+
+			struct intStack is1, is2;
+			
+		- note the required keyword struct preceding the declarations of variables is1 and is2
+		- variables can be declared when the tagged struct is declared, also:
+			struct intStack {
+				Boolean isEmpty, isFull;
+				int numElements;
+				int stack[SIZE];
+			} is1, is2;
+		- Tagged struct variables can be initialized as usual with either declaration approach.
+	2. Using a typedef
+		typedef struct {
+			Boolean isEmpty, isFull;
+			int numElements;
+			int stack[SIZE];
+		} intStack;
+
+		intStack is1, is2;
+
+		- Variables can be declared without the struck keyword, unlike the other case.
+The following are compatible and can be assigned to each other:
+	1. Any two struct variables declared to be of the same tagged type.
+	2. Any two struct variables declared to be of the same user-defined type.
+	3. Any two struct variables declared in the same anonymous struct declaration.
+	- note that in the following st1 and st2 are not compatible
+	struct {
+		int a[3];
+		int x, y;
+	} st1;
+	struct {
+		int a[3];
+		int x, y;
+	} st2;
+	NOT COMPATIBLE.
+	
+		struct {
+		int a[3];
+		int x, y;
+	} st1, st2;
+	COMPATIBLE.
+parameters
+	- struck parameters are declared in the same way as struct variables
+		void foo (struct charStack s1, intStack s2)
+		
+		where charSTack is a tagged struct type and intStack is a user-defined type.
+	- can only pass arguements of compatible types
+	- arguments are passed by value, so all member values are copied into the activation record
+	- because this copying can be expensive, structs are often passed in using pointers.
+		this way only the pointer value is copied:
+		typedef struct {
+			Boolean isEmpty, isFull;
+			int numElements;
+			int stack[SIZE];
+		} intStack;
+		boolean isEmpty (intStack *);
+Return types
+	- structs can be returned by functions
+	- the way the struct is named determines the syntax of the return type:
+		struct intStack doSomethingNow(Parameters)
+
+		or user defined type
+		intStack doSomethingNow(params){}
+		
+All combinations are valid:
+	- Arrays of arrays
+	- Arrays of structs
+	- Structs of arrays
+	- structs of structs
+arrays of structs
+	struct bookDB{
+		char *author;
+		char *title;
+		char *publisher
+		int copyrightDate;
+		int numPages;
+		char format;
+	} db1[SIZE], db2[100];
+	or	
+	typedef struct {
+		char *author;
+		char *title;
+		char *publisher
+		int copyrightDate;
+		int numPages;
+		char format;
+	} bookDB;
+
+	bookDB db1[SIZE] = {
+						{"Melville, Herman", "Moby Dick", "Doubleday", 1954, 454, "book"},
+					    {...},
+					    {...}
+					   };
+
+	bookDB db1[100];
+	bookDB b1;
+	
+	db1[52] = b1;
+	db1[25].author = "Lovecraft, H. P.";
+Structs within structs
+	- Comparable to a java class that has member objects
+	- makes representations more conceptually integrated
+	- promotes readability, portability, manageability.
+	- example:
+		struct time {
+			int hour;
+			int minute;
+			int second;
+		};
+		
+		struct date {
+			int year;
+			int month;
+			int day;
+		};
+		
+		struct timeStamp {
+			struct time t;
+			struct date d;
+		};
+	- initializing, assigning, etc. Performed using syntax before...
+		struct date d1 = {2015, 3, 30};	
+		struct time t1 = {10, 0, 0};
+		struct timeStamp ts1= {{2015, 1, 1}, {0, 1, 0}};
+		ts1.t = t1;	
+		ts1.d.day = 15;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

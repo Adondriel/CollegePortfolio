@@ -1,0 +1,153 @@
+- Large programs maintained as a single file pose problems for several reasons:
+	1. Hard to read and manage
+		- Top-Down design imposes a hierarchical structure on programs
+		- Functions reflect one aspect of this structure
+		- in addition, a program may make se of data structures that are a conceptual unit, such as stacks. queues, and lists.
+		- the code for such components - while used by a given program - merely clutter/obscure the main program itself which simply uses such constructs as tools.
+		- It is much easier to read and maintain programs if such distinct components are maintained in their own separate files.
+	2. Compiling.
+		- If a program consists of a set of distinct components as discussed above, frequently only need to recompile and/or link those components that have changed in a given round of development
+		- If everything resides in a single file, you must recompile everything
+		- on the other hand, if a program consisted of a set of seperate but related files, then only those that were change have to be recompiled.
+
+
+-For example, consider an application that uses an ADT such as a stack or queue
+	- in general, the stack implementation will consist of one or more files, and the application will consist of one or more independent fiels that access the stack code.
+	- once the stack implementation is working, it can be used with any other application and will not need to be compiled unless changes are made to it.
+	- the only thing that needs to be done to combine it with the application is to link the object files**
+there are two types of c source files:
+	Header(include) files, which have extension .h
+	Source files, which have extension .c
+Consider the scenario described previously
+	an application is in a file named app.c and it uses code in a file that implments a stack ADT called stack.c
+	in order for the compiler to compile the code in app.c, the compiler must know what the functions look like:
+		number of params, types of params, return types
+	- this is no different than if we had everything in a single file
+A header file includes all the information that a .c file needs to use the code in another file.
+	-includes:
+		1. Function declarations
+		2. Type definitions
+		3. Macro Definitions
+		4. Global Variables
+	- given our example
+		* stack.c will contain the executable code for the stack implementation.
+The #include preprocessor directive causes the contents of the named file to be included in the current file
+	- there are two formats for the #include arguments
+	1. <file_name.h>
+		used with system-defined header files
+		preprocessor looks in directives where system header files are kept.
+	2. "file_name.h"
+		user defined header files
+		preprocessor looks in the current directory, then directories where system header files are kept.
+	you can direct the compiler to look in other directories by using the -I path directive when compiling
+		forces the compiler to search path before other directories
+		for example, gcc -I ~\myHeaders
+	Recommended not to use an absolute path for a directory due to portability issues
+		relative paths are better (but still not perfect)
+Typical contents of header files
+	1. Macro Definitions
+	2. Type definitions
+		- both promote:
+		portability
+		reuse
+		ease of modification
+		consistency across files
+	3. Funcion prototypes
+		- note that the header file containing the prototypes will be included in the source file in which the functions are defined
+		- Only the prototypes for functions that are shared with other files should be included in a header file
+			comparing to java, public functions appear in header files, private functions only in the source file.
+			just dont include functions in the .h that you don't want other programs to be able to see.
+ 	4. Variable declarations
+		- Variables - like files - can have a declaration and a definition
+			the definition is what allocates storage for the variable
+		- There will only be one definition for a variable in the source file that defines the variable
+		- Every file that accesses the variable requires a declaration for the variable
+		- Every variable declaration used so far has been both a declaration and a definition
+		- Declarations
+			Syntax: extern type id;
+			Array declarations can omit the size.
+
+Includes can be nested
+	- an include file can have it's own includes
+	- but - if a file is included mroe than one time - the compiler will complain if there are typedefs involved
+		a type cannot be declared more thna once.
+	typiclly occurs when
+		file1.h includes file 3.h
+		file2.h includes file 3.h
+		prog.c includes both file1.h and file2.h and file 3.h has a typedef.
+	-this can be prevented by using conditional compilation:
+		file3.h contains something like
+		#ifndef FILE3_H
+			#define FILE3_H
+			//typedefs placed here
+		#endif
+	- if prog.c includes file1.h first, when file3.h is included FILE3 will not be define yet so the conditional code will be incorporated into prog.c
+	- when file2.h is included file3 will not be defined so the typedef will not be incorporated into prog.c a second time.
+
+						
+
+Make files
+A make file is a mechanism for making compilation and linking less tedious
+the default name for a make file is makefile or Makefile
+A make file consists of a set of a rules, each of which consists of two parts:
+	1. A goal
+	2. A command to achieve the goal
+Syntax:
+	target: [dependencies]
+	[<TAB> command]
+	[<TAB> command]
+	...
+	- Goal (the first line)
+   	 * contains
+	  1. Target file, followed by a colon
+	  2. Files the target is dependent on (dependencies, prerequisites)
+	 *If any of the dependencies change, the target must be rebuilt
+	- Command (The second line)
+	 * This line specifies the command to rebuild the target
+	 * MUST BE INDENTED BY A SINLE <TAB>
+Consider the following:
+	stackTest.c include intStackArray.h and charStackArray.h intStackArray.h and charStackArray.h include boolean.h
+	- A Make file for this program might look like
+		stackTest: stackTest.o intStackArray.o charStackArray.o
+			gcc -o stackTest stackTest.c intStackArray.c charStackArray.c
+		stackTest.o: stackTest.c intStackArray.h charStackArray.h boolean.h
+			gcc -c stackTest.c
+		intStackArray.o: intStackArray.c intStackArray.h boolean.h
+			gcc -c intStackArray.c
+		charStackArray.o: charStackArray.c charStackArray.h boolean.h
+			gcc -c charStackArray.o
+How it works
+	-To invoke the make file, enter make
+		make will look for a file named makefile or Makefile
+		make will create the first target in the file, which is usually a complete build
+		make will only do as much work as is necessary to build the target
+			it will examine the time stamps of the target file and the dependency files
+			if the time stamp of the target differs from any of the dependencies', the target must be rebuilt
+			if a dependency 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+

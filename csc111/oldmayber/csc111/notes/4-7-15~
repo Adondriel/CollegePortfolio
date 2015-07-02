@@ -1,0 +1,129 @@
+enumerations
+consider representing Boolean values in c89
+	- there are several approaches that can be used:
+	1. simply use variable and values.
+	2. Use macros
+	3. Use named constants:
+		const int TRUE = 1;
+		const int FALSE - 0;
+		int b1;
+		
+		b1 = FALSE;
+		b1 = TRUE;
+	b1 is still not defined as a type
+	the purpose of enumerated type is to alleviate the above situation
+the declaration syntax of the C enum type is similar to that for structs and unions
+	- however the semantics are quite different
+	- an enumeration represents a set of named constants
+syntax:
+	enum [id] {id [= constexpr], id [= constexpr] ...}
+	- example:
+		enum {FALSE, TRUE} b1;
+		false is = 0
+		true = 1.
+Semantics:
+	- each Identifier represents an int, starting from 0
+	- in each above example, FALSE = 0, TRUE = 1
+Enumerated types can be named using tags, or typedefs, and declarations of variables reflection the syntax use to structs:
+	enum boolean {FALSE, TRUE};
+	
+	enum boolean b1;
+   or
+	typedef enum {FALSE, TRUE} boolean;
+	
+	boolean b1;
+Can override the default assignments by using the optional initialization syntax:
+	enum {TEN = 10, THREE = 3, FOUR, TWENTY = 20, SECONDFOUR = 4} el;
+	- there are no restrictions on the order in which values are assigned
+	  * They do not need to be in ascending order
+	  * They do not need to be adjacent values
+	- if an initializer is ommited, the identifier is assigned the value of its predecessor plus one.
+	- multiple identifiers may have the same value
+Since enumerated types are simply synonyms for ints, values may be indiscriminantly assigned between int and enum types:
+	typedef enum {FALSE, TRUE} boolean;
+	boolean b1;
+	int i = 1;
+	i = false;
+	b1 = i;
+	b1 = 10;
+	- it is advisable to only assign enumerated values to associated enumerated variables.
+Advanced Pointers
+Have been implementing ADTs like lists, stacks, and queues in terms of arrays.
+	- A limitation of this approach is that the data structure has limited capacity
+		* Programmer must estimate ahead of time how many elements the data structure will be required to hold
+		* if estimate too low,will not be able to hold everything
+		* if estimate too high, may waste a lot of space
+		* conceptually, these adts have no size limitations
+	- cannot return newly created objects
+		* if declare an array inside a function, cannot return it.
+		* if want to effectively create a new object, must pass one in as a parameter and modify the parameter.
+C Provides a mechanism for dynamically allocating storage for data objects.
+	- Solves the above problem
+Te Basic functions
+	1. malloc (memory allocation)
+		- Syntax: void *malloc (size_t size)
+		- Semantics:
+			* Allocates size bytes of contiguous memory
+			* size is usually specified using the sizeof function
+			* Memory is allocated from the heap - a special part of memory used specifically for dynamically allocating memory.
+			* a pointer to the allocated memory is returned
+				Note that the pointer type is void
+				the compile doesn't know what kind of data object will be stored in the allocated memory, so a generic pointer (memory address) is returned.
+				the pointer will be coerced on assignment, or can be explicitly cast:
+	 				int *p = malloc(sizeof (int)); //implicit conversion
+					int *q = (int *)malloc(sizeof(int)); //explicit cast
+			* if the memory cannot be allocated, the NULL point if returned
+			   ***it is the responsibility of the programmer to check this!!!.*******
+	2. calloc (memory allocation with clear)
+		- Syntax: void *calloc (size_t n, size_t size)
+		- Semantics:
+			* Allocates n storage locations of size bytes and initializes to zero.
+			* generally used for dynamic arrays
+			* otherwise works like malloc.
+			* zeroes out the location that is being returned, malloc does not do this.
+	3. realloc (memory reallocation)
+		- Syntax: void *realloc (void *ptr, size_t size)
+		- Semantics:
+			* Allocates size bytes of contiguous memory and assigns to ptr.
+			* ptr must point to memory that was already dynamically allocated
+			* used to implement arrays that can grow and shrink
+			* when increasing the size of the allocated block, does not initialize new memory.
+			* original values remain unchanged
+			* if memory cannot be allocated, original values remain intact
+			* if first argument is null, acts like malloc
+			* if second argument is zero, memory is freed.
+These functions are included in stdlib.h
+The null pointer
+	- special pointer that points to nothing
+	- included in locale.h, stddef.h, stdio.h, stdlib.h, string.h, time.h
+	- defined by macro NULL
+	- must be tested when allocate memory:
+		p = malloc(100 * sizeof(int));
+		if (p == NULL)
+		   ...
+	   or
+		null represents FALSE, any other legal value is true.
+		if (p)
+		   ...
+since a character only requires one byte of storage, can dynamically allocate strings with the use of sizeof
+	char *s = malloc(LEN + 1);
+not initialization takes place
+	- can use strcpy to initialize:
+		char *s = malloc(lEN+1);
+		strcpy(s, "hello");
+String functions in string.h all require a parameter to recieve the result when a new string is created.
+	- Dynamic allocation allows returning of newly created data objects:
+		char *myStrcpy (char *s)
+		{
+			char *cpy = (char *)malloc(strlen(s)+1);
+			strcpy(cpy, s)
+			return cpy;
+		}
+		
+		char *q;
+		q = myStringcpy("goodbye");
+		//This would work, because of dynamic allocation. YAY!
+
+
+		
+

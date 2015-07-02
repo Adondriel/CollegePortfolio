@@ -1,0 +1,56 @@
+Exam:
+	Stuff from day 1	
+
+        Preprocessing is the first pass of any C compilation. It processes include-files, conditional compilation instructions and macros.
+
+        Compilation is the second pass. It takes the output of the preprocessor, and the source code, and generates assembler source code.
+
+        Assembly is the third stage of compilation. It takes the assembly source code and produces an assembly listing with offsets. The assembler output is stored in an object file.
+
+        Linking is the final stage of compilation. It takes one or more object files or libraries as input and combines them to produce a single (usually executable) file. In doing so, it resolves references to external symbols, assigns final addresses to procedures/functions and variables, and revises code and data to reflect new addresses (a process called relocation).
+							stack:	
+	activation records		[foo4]
+		foo1 -> foo2		[foo3]
+		foo2 -> foo3        [foo2] 
+		foo3 -> foo4		[foo1]
+Chptr 10
+	- A Stack datatype is a first in last out data structure
+		- imagine a tray dispenser in a cafeteria
+	- its main charcteristic is the top: the element on the top of the stack
+		- It is the only element accessible
+	- Standard operations:
+		1. Create(): Creates a new stack data object
+		2. push(element, stack): Adds element to the stack
+		3. pop(stack): returns the top element of the stack and removes it from the stack
+		4. isEmpty(stack); Return a boolean indicating whether there is anything in the stack
+	- Additional operations:
+		1. ifFull(stack): only needed for finite stacks
+		2. makeEmpty(stack): Empties the stack, a sequence of pops will do the same.
+		3. peek(stack): returns the top element of the stack iwthout removing it. A pop followed by a push will do the same.
+	-Example: push 5 -> 5 _push 1 -> 1,5 -> push 4 -> 4,1,5 -> pop -> returns 4, removes it -> 1, 5 -> etc.
+	- The Text's implementation (p 222)
+	lab: pos 0 indicates the current size of the array.\
+	- a queue is a first in first out data structure
+		- Imagine any line you've ever waited in
+	- a queue has a head and a tail
+		- new elements are added at the tail
+		- elements are removed at the head.
+	- standard operations:
+		1. create(): create a new queue data object
+		2. enqueue(element, queue): adds a new element to the tail of the queue
+		3. dequeue(queue): returns the element at the head of the queue and removes it from the queue
+		4. isEmpty(queue): returns if it is empty or not.
+	- additional operations:
+		1. isFull(queue): returns if it is full or not
+		2. makeEmpty(queue): empties the queue.
+	- 
+	
+	
+activation record:
+	AR Created
+	Main runs
+	methods get called.
+	methods return if they have to
+	AR Deleted
+
+		

@@ -1,0 +1,119 @@
+Trees:
+	A tree is a collection of nodes within the following properties:
+		- Nodes are connected by edges (links, arcs)
+		- Edges are directed (I.E., have a start points and end point)
+		- Each node has one parent except one, called the root
+		- Nodes may have any number of children
+		- in compsci trees are always upside down.
+	Example:
+		[picture of a tree... very simple]
+	
+	Terminology:
+		- Nodes at the ends of edges are children
+		- Nodes at the starts of edges are parents
+		- Nodes with no children are called leaves
+		- A path is a sequence of nodes and edges connection two nodes.
+		- A node's descendants are nodes on the path from the node to a leaf.
+		- A node's ancestors are nodes on the path from the node to the root.
+		- A node's siblings are nodes that have the same parent as the node.
+		- An internal node is one with at least one child
+		- An external node is one with no children (a leaf)
+		- The depth of a node is the number of its ancestors
+		  (the number of edges from the root to the node)
+		- The Level of a node is one plus it's depth
+		  (one plus the number of edges from the root to the node)
+		- numbering of tree starts at 1. The root of the tree = 1.
+		- The height of a node is the greatest number of edges between the node and one of it's descendant leaves.
+		- The branching factor (degree, out degree) of a tree is the maximum number of children of any node.
+			the greatest number of children that any node has.
+		- A Forest is a set of disjoint trees
+		- A tree can be empty
+		- A tree can be defined in term of non-direct edges
+			- in such cases there is no obvious root unless on is explicitly indicated
+			- We will not consider such situations.
+		- A tree can be defined recursively as a root node whose children are trees
+			- The trees rooted at the children of a node are called subtrees
+		- Typical tree ADT operations
+			- Creating a tree
+			- listing all the elements (in some order)
+			- Searching for a key.
+			- Inserting a node.
+			- Deleting a node.
+	Nodes:
+		- Nodes will generally be implemented as structs
+			* Need storage for at least
+				* Data/key
+				* children pointers
+			* Other Members as needed
+				* Often a parent pointer is included to assist tree traversals.
+			* Children pointers are usually stored as arrays of pointers or linked lists of pointers
+				* Since - in general - the number of children that nodes have may vary, and over the lifetime of a tree the number of 	children a particular node has may vary, dynamic data structures are preferred.
+				* If a static array is used, the programmer must estimate the max size required and much space may be wasted.
+	Trees implemented as arrays
+		- Each slot of the array represents a node
+		- The values of the children pointers are indices into the array
+		- in general, no particular order is imposed on the nodes in the array.
+	Trees implemented as linked lists
+		- Child nodes are allocated dynamically - as true pointers
+		- T.root points to root of tree
+		- Nodes have same structure as described above.
+	Alternative representation of nodes
+		- The variability in the number of children a node may have is a major issue in designing tree data structures
+		- An alternative strategy is to use just three pointers per node
+			* left child
+			* right sibling
+			* Optional parent
+			- This causes it to have to walk through all the children to get to the different children.
+			- Every node is exactly the same size, rather than every node needing dynamic amounts of pointers to children.
+Binary Tree:
+	A binary tree is one in which each node has at most two children
+	Each node has at least the members.
+		- Key
+		- LeftChild
+		- RightChild
+	terminology:
+		A binary tree is full if every node is either a leaf or has two children.
+		A binary tree is complete if every level is full except possibly the deepest, where every leaf node has a left sibling except for the leftmost child of the leftmost parent
+		A binary tree is perfect is all leaves are the same level and all internal nodes have two children.
+	The number of nodes at level i is at most 2^1-i (2^height)
+	The number of nodes in a perfect binary tree is 2^(height+1)-1
+	Array representation
+		- Because of their special properties, binary trees can be represented using arrays without the need to explicitly represent pointer information
+		- Given a node stored at index i of array a
+			* Its left child will be found at a[2i]
+			* its right child will be found at a[2i+1]
+			* its parent will be found at a[Floor(i/2)]
+
+Traversals:
+	To list all the elements in a tree, one has to traverse the tree
+	There are a number of systemmatic approaches to doing this.
+	1. Depth-first
+		- A depth-first traversal follows paths to leaves, on leaf at a time
+		- If a tree had an infinite path, a traversal algorithm could never stop
+		- a depth-first traversal can be implemented using a stack:
+			push(root)
+			while(stack not empty) {
+				node <- pop
+				process node
+				for each child of node
+					push child
+			}
+	2. Breadth-First 
+		- A breadth-first traversal examines all levels of a tree, one level at a time.
+		- All siblings will be examined before any of then children are examined
+		- A breadth-first traversal can be implemented using a queue:
+			enqueue(root)
+			while(queue not empty) {
+				node <- dequeue
+				process node
+				for each child of node
+					enqueue child
+			}
+	There are three flavors of depth-first search for binary trees, based on the order in which nodes are examined
+		1. in-order
+			- order of evalution is: left child, node, right child.
+		2. Pre-order
+			- Order of evalution is: node, left child, right child.
+		3. Post-order
+			- order of evalution is: left child, right child, node
+		- The order is determined by the order in which the nodes are pushed onto the stack.

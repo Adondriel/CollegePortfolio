@@ -1,0 +1,109 @@
+When a pointer is used to reference an array, simple arithmatic can be performed with the pointer.
+	- legal operations:
+		1. Adding an interget to a pointer
+		2. Subtracting an interger to a pointer
+		3. Subtracing a pointer to an array from a pointer to the same array.
+	- Adding or subtracting integers from array pointers is equivalent to adding or subtracting integers from an array index.
+		* Example:
+			int a[5];
+			int *p = &a[0];
+			int i = 0;
+			
+			a[i] = 10;
+			printf("%d %d\n", a[i], *p);
+			i++
+			p++
+			a[i] = 20;
+			printf("%d %d\n", a[i], *p);
+		* C does not check if pointer goes beyond bounds of array.
+
+When the value of a pointer is incremented or decremented the amount is not by an absolute value.
+	- the amount is based on the size of the data type stored int he array.
+	- if the array stores ints, then adding one to a pointer increases the value of the pointer by the amount needed to store an int.
+	- if the arrray stores doubles, then adding one to a pointer effectively increases te value of the pointer by the amount needed to store a double.
+	
+
+	- subtracting two pointers ive distance between elements:
+		int a[10];
+		nit *p = &a[2];
+		int *q = &a[7];
+		int i;
+		
+		i = q-p; // i = 5
+
+using pointers for array processing
+	- pointers can be used to process an array as an alternative to indexing
+	- example:
+		#define N 10
+		
+		int a[N]
+		int *p = &a[0];
+		int max = *p;
+		
+		for (p = &a[1]; p < &a[N]; p++)
+			if (*p > max)
+				max = *p;
+	- using * and ++ together
+		define N 10
+		
+		int a[N];
+		int i;
+		
+		while (i < N)
+			a[i++] = ...;
+	and
+		#define N 10
+
+		int a[N];
+		int *p = &a[0];
+		
+		while (p < &a[N])
+			*p++ = ...;
+
+
+pg 262 for table of * and ++ and () combinations
+
+Array names as pointers
+	int a[N]
+	int *p;
+	
+	p = a; //array names are automatically pointers. the same as p = &a[0]
+
+can do pointer arithmatic with array names, but cannot assign to array names
+
+
+- arrays are passed by reference
+	- if an array is not going to be changed in the function, define them as const so that 
+	  the compiler won't let you change the value of an array inside the function
+	- can pass in subarrays to array-processing functions with no changes
+- Given that array names can be used as pointers, the opposite is also true:
+	pointers to arrays can be used as array names
+	
+2d arrays and pointers
+
+	- 2d arrays stored in row-major order, i.e, row-by-row
+	- example loop
+		int m[ROWS][COL] = ...;
+		int *p;
+		
+		for (p = &m[0][0]; p <= &m[rows-1][col-1]; p++)
+			*p= ...;
+	or
+		int m[ROWS][COL] = ...;
+		int *p;
+
+		for (p = &m[0][0]; p < &m[0][0] + rows * col; p++)
+			*p = ...;
+- rows of a 2d array can be processed as individual 1D arrays
+	- m[i] is a pointer to first element of row i of m
+	- m[i] is equivalent to &m[i][0]
+	- m[i] is also equivalent to *(m+i)
+	- &m[i][0] == &(*(m[i]+0)) == &(*(m[i])) == m[i]
+	
+
+
+
+
+
+
+

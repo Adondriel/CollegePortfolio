@@ -1,0 +1,92 @@
+C: Functions - recursion
+- Recursion is the process in which a function calls iteself
+- many problems are naturally described in recursive terms
+- for example, the Fibonacci numbers:
+	0, 1, 1, 2, n-1+n-2
+- A recursive definition has the following parts:
+  1. A base case
+     - This represents the end point of the recursion; where it stops
+       n = 0,1 above
+  2. The recursive definition
+     - the value of the problem is described in terms of simpler version of the problem
+       fib(n-1)+fib(n-2) for n>1
+- Condsider a slightly simpler problem: Division of positive integers by subtraction:
+  Quotient(s,d) = 0 s < d ... Quotient(s-d,d)+1 s>=d
+- a recursive function that implements quotient:
+  \\assumes positive integers
+   int quotient (int s, int d)
+   {
+     if (S < d)
+		return 0;
+     else
+		return 1+quotient(s-d,d);
+   }
+- When implementing recursive functions, care must be taken to 
+	1. Check to see if the base case has been reached before making a recursive call
+	2. reducing he problem for each recursive call
+- if either is forgotten, infinite recusion will result.
+- quicksort is a recursive algorithm based on the divide and conquer strategy.
+	1. solve a problem by breaking it into smaller components
+	2. solve each of the subproblems
+	3. combine the solutions into the final solution
+- strategy underlying quicksortL
+	given array a[0..n-1]
+	1. select an element; call this element the pivot
+	2. partition a into two sets:
+		a, those elements greater than the pivot
+		b, those elements less that the pivot
+	3. put the pivot between the two partitions; this gives
+		[elements < pivot | pivot | elements > pivot]
+		- note that the pivot is exactly where it belongs in the sorted result
+	4. recursively sort each of the partitions
+- issues:
+	1. how to choose the pivot
+		- the text's strategy uses the element in the first location of the array
+    	- randomly select an element
+		- median of three: use the median value of the array elements from the first, last, and middle of the array.
+- algorithm:
+	QS(a[], low, high)
+	{
+		if (low<high)
+		{
+			pivotIndex <- partition(a[],low, high)
+			QS(a[], low, pivotIndex-1)
+			QS(a[], pivotIndex+1, high)
+		}
+	}
+- note that this algorithm performs the sort in place
+	- no auxiliary arrays are used to story temporary data.
+-partitioning
+	- this is the complicated part
+	- the text's strategy:
+		1. Store the pivot value (in a[low]) in a temporary variable
+		2. Move from high towards low until a value less than the pivot is found or the low/high indices cross
+			* if the pointers havn't crossed, move the value into the location indexed by low and increment low
+		3. Repeat moving from low towards high, using low for high and greater than for less than
+		4. when low and high have the value copy the pivot into that slot and return the value of low/high
+
+int partition (int a[], int low, int high)
+	{
+		int pivot = a[low];
+		while (low< high)
+		{
+			while ((low<high)&&(a[high] >= pivot))
+			{
+				high--;
+			}
+			if (low < high)
+			{
+				a[low++] = a[high]'		
+			}
+		
+
+
+
+
+
+
+
+
+
+
+

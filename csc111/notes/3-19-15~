@@ -1,0 +1,134 @@
+String literals delimited by double quotes
+can have embedded escape characters
+	- Embedded octal representations of characters begin with a backslash
+		they are followed by no more than three octal digits
+		any digit that is not a legal octal digit terminates the octal representation
+		any digit beyond the third are interpreted as a regular character
+		"\3241" is interpreted as the string consisting of the character whose represention is 324_8 = 212 _10 followed by '1'
+		"\3291" is interpreted as the string consisting of the character whose represention 32_8 = 26_10 followed by '91'.
+	- embedded hexadecimal representations of characters begin with \x
+		they are followed by any number of hex digits
+		any digit that is not a legal hex digit terminates the hex representation
+		"\32s" is interpreted as the string consisting of the character whose representation is 32_16 = 50_10 followed by 's'.
+A string literal must be contained on one line
+	- to split a string literal over multiple lines, a backslash must be the last character on the line:
+		"aihfuidhsg\
+		 asnfkahdgjkhdg\
+		 asfuiadfhdsjk"
+	- two or more adjacent string surrounded by white space are concatenated
+		"abcasd"
+		"asadfdsg"
+		"asfadfds"
+There is no string data type in c
+	- a string is represented as a 1d array of chars
+	- what set a string apart from being "just" and array of chars is that string are terminated by the null character: "\0"
+	- The string "abcd" is represented in memory as
+		['a','b','c','d','\0']
+	- char cArray[4] = {'a', 'b', 'c', 'd'};
+	- char s[5] = {'a','b','c','d',''\0');
+	Since there is no way of distinguishing which of the above is intended to be a string and which just a char array
+     the following is often used to distinguish strings:
+	#define STR_LENGTH 4
+
+	char s{STR_LENGTH+1] = {'a','b','c','d','\0'};
+	a string can also be declared as *s;
+	
+String variables can be initialized wit ha sequence of character delimited by double qoutes:
+	#define STR_LENGTH 4
+	
+	char s[STR_LENGTH + 1] = "abcd";
+
+
+	the null character is automatically appended at the end
+	note that the intitializer is not a string literal, it is just a shorthand to declare the string.
+	if the initializer is too short, the string is padded by null chars
+	if the initializer is too long, and error happens
+	if the initializer has the same number of non-nullcharacter as the array length, the null character will be omitted.
+	in general omit the size of the array when using and initializer to prevent any issues.
+	
+There is a subtle difference between the following:
+	char s1[] = "abcd";
+	char *s2 = "wxyz";
+	- s1 is a pointer to a char array that is a string
+		it can be assigned, s1[2] = 'g';
+	- s2 is a pointer to a string literal
+		it cannot be assigned, *(s2+2) = 'g'; !!ERROR!!
+	however, elements from each can be accessed in the same manner using the standard methods for accessing array elements
+		char *s2 = "wxyz"
+		char ch;
+		
+		ch = s2[3]; // ch get 'z'
+		ch = *(s2+1); // ch get 'x'
+
+
+
+output
+	- Printf
+		syntax: %-m.ps
+		works like the conversion spec for ints
+			p specifies how many characters
+			m specifies the field width
+			if p is not specified, printing terminated when the null character is encountered
+				if the argument is not a string, there could be a lot of output
+	- puts
+		syntax: puts(string)
+		prints on a single line terminated with a newline
+			
+input
+	-scanf
+		skips all whitespace until encounters a non-white char
+		reads characters until encounters whitespace
+		apprends a null char
+		strings read with scanf never have embedded whitespace
+		arguments to scanf do not need address of operator (&) as string variables are already references
+		size of array variables argument has no influence on number of chars read
+		using %ns limits input to n characters
+	- gets
+		read a single line of characters where the line is terminated by a new-line char (which does not become part of the input string)
+		appends null character
+		incorporates all whitespace
+		size of array variable argument has no influence on number of characters read.
+User defined input functions
+	in designin string input functions, must decide how to handle
+	- initial white space
+	- input termination
+	- input larger than array size
+
+examples of string processes 
+count spaces: pg287
+version 2: pg 288
+
+string.h
+	1. strcopy
+		- prototype char *strcopy (char *s1, const char *s2)
+		- semantics:
+			copies s2 into s1
+			returns s1
+		does not check if s1 is large enough to hold s2
+		copying terminated when null character encountered
+	2. strnspy
+		- prototype char strncpy (char *s1, const char *s2, int n)
+		- semantics:
+			same as for strcpy, but only copies n chars
+        - pads with null chars if |s2| < n
+		- if |s2| >= |s1| null chars not copied
+	3. strlen
+		- prototype: size_t *strlen (const char *s)
+		- semantics:
+			returns number of chars in s preceding the null character
+			count does not include null char
+			if the string is defined as an array, strlen does not return the size of the array.
+	4. strcat
+		- prototype: char *strcat (char *s1, const char *s2)
+		- semantics:
+			*appends s2 to s1
+			*returns s1
+		- undefined if s1 is not large enough to hold all of the characters of s2.
+
+
+	
+
+
+
+
+

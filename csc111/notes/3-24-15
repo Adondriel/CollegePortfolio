@@ -1,0 +1,125 @@
+String Idioms
+	Below are presented several functions for processing strings
+	These duplicate functions provided by string.h
+	value is in understanding code
+	several version fo each are provided where each version affords a greater degree of sophistication
+Functions:
+	1. Counting the characters in a string.
+		a. Version 1
+			size_t my_strnlen1 (const char *s)
+		b. Version 2
+			size_t my_strnlen3 (const char *s)
+		more on pg 297-298.
+	3.Contatenate strings. pg 298-299.
+
+Simplest way to create an array of strings is the use a 2D array
+	#define N 10
+
+	char strArray[][N+1] = {"all", "along", "the", "watchtower"};
+	
+	[a][l][l][\0][\0][\0][\0]...
+	[a][l][o][n][g][\0][\0]...
+	[t][h][e][\0][\0]...
+	[w][a][t][c][h][t][o][w][e][r][\0]
+
+	better to use a ragged array
+		Array where each row is just the right size
+		can be achieved by using a 1D array of pointersto strings
+			char *raggedStrArray[] = {"all", "along", "the", "watchtower"};
+		each position holds only what it needs.
+		to access it, use raggedStrArray[i]
+		to access character j of string i use raggedStrArray[i][j];
+
+Command-line arguments
+	Providing input to the program
+		you can hardcode input, or use scanf to get input
+	another approach uses command-line arguments
+		- a command-line argument is a value specified at the command line when the command
+			to execute a program is issued
+		- for example, if you have a program that finds the max of three integers:
+			./a.out 20 30 10
+		    where ./a.out is the command and 20,30,10 are the command line arguments
+	to use command-line arguments with a user-created program, need to specify two parameters to main:
+		int main (int argc, char *argv[])
+		
+	- argc holds the number of command-line arguments that were specified when the program what executed
+	- argv[argc] always holds a null pointer
+	- argv[0] is always the name of the program
+	- the intervening slots hold the command-line arguments
+		example:
+		argv[1] == "20"
+		argv[2] == "30"
+		argv[3] == "10"
+	- ***note: the names argc and argv are conventions and not requirements
+	
+
+
+Conditional Compilation
+	- Can include preprocessor directives that will control what is compiled based on whether a condition is met
+	- several approaches available
+		1. #if/#endif directive
+			- syntax: #if constant_expr statements #endif
+			- Semantics: If constant_expr is non-zero, /statements/ remain in the program
+				if constant_expr is zero, statement are removed by the preprocessor
+			- if constant expr is undefined, it evalutes to zero
+			- constant_expr often expressed in terms of a macro:
+				#define DEBUG 1
+				...
+				#if DEBUG
+					//debugging code
+				#endif
+		2. /defined/ operator
+			- Syntax: defined(id) | defined id
+			- Semantics: if id is defined, return 1
+				if id is undefined, return 0
+			- use equivalent to above example:
+				#define DEBUG
+				...
+				#if defined DEBUG
+				 //debugging code
+				#endif
+		3. #ifdef and #ifndef directives
+			- syntax: #ifdef id statements #endif
+				  #ifndef is statments #endif
+			- semantics: if id is defined, statements remain in the program
+				if id is undefined statements ar eremoved by the preprocessor
+			- same thing as above, example:
+				#define DEBUG
+				...
+				#ifdef DEBUG
+					//debugging code
+				#endif
+	- preprocessor conditionals can be nested
+		- additional clauses are #elif and #else
+		- #elif are used for sequences of nested ifs
+		- #else represents the default cause and should only appear once
+		- general syntax, applicable to #ifdef and #ifndef
+			#if const_expr1
+				stments1
+			#elif const_expr2
+				stments2
+			#elif const_expr3
+				stments3
+			#endif? maybe?
+reasons to use conditional compilation
+	- debugging
+		- one of the most common debugged tools is a print statement
+		- when developing code, these statements are usually scattered throughout
+		  a program for displaying the values of variables, for example(should be online).
+		read over chptr 14.
+			
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+

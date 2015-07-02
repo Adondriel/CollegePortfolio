@@ -1,0 +1,202 @@
+Closing files
+	Stream will be closed implicitly when program execution terminates, but can be explicitly closed
+	syntax: int fclose (FILE *stream);
+	Returns 0 on success, EOF on failure
+	example:
+	FILE *inFile, *outFile;
+	int flag;
+	...
+	inFile = fopen("/data/data.txt", "r");
+	if (!inFile){
+		//display error msg
+		exit(1);
+	}
+	outFile = fopen("/data/results.txt","w");
+	if (!outFile){
+		//Display error msg
+		exit(1);
+	}
+	
+	//process reading input from inFile and saving results to outFile.
+	
+	i = fclose(inFile);
+	if (i){
+		//display err
+		exit(1);
+	}
+	i = fclose(outFile);
+	if (i){
+		//display err
+		exit(1);
+	}
+	
+
+3. Attacking a file to an open stream
+	Stream be associated with a pointer that is already allocated
+	Syntax: FILE freopen (const char *stream, const char *mode, FILE *newStream);
+	associates newStream with pointer stream
+	returns a pointer to the third argument if successful, a null pointer on failure.
+4. Temp files
+	Sometimes a program needs a file for intermediate processing during execution
+		- such a file is created by the program, and generally is not intended to be permanent.
+	c provides a facility for creating such files
+	Syntax: FILE * tmpfile (void);
+	creates a temp file that is destroyed when the program terminates
+	returns a pointer to thefile if successful, a null pointer on failure
+	the program has no access to the name of the file
+	the file cannot be made perm
+	the programmer can chosoe to manually manage temp files
+		- in such cases the programmer usually doesnt want to use the name of an existing file
+		- System-generated file names can be created using 'tmpnam'.
+		- Syntax:
+			(a) filename = tmpnam(null)
+				- this version createa static string and returns a pointer to it
+				- example:
+					char *fileName;
+					fileName = tmpnam(NULL);
+			(b) tmpnam(filename);
+				- this version copies the generated name into array filename
+				- example:
+					char fileName[L_tmpnam];
+					tmpnam(fileName);
+			'L_tmpnam' is a macro defined in stdio.h, the char array should be at least this large.
+			
+5. Deleting a file
+	- Syntax: int remove (const char *filename);
+	- returns 0 on success, non-zero on failure.
+6. Renaming a file
+	- Syntax: int rename (const char *oldname, const char *newname);
+	- returns 0 on success, non-zero on failure.
+
+Formatted I/O
+File Versions of printf and scanf:
+	- int fprintf (FILE *stream, const char *format, args)
+	- int fscanf (FILE *stream, const char *format, args)
+	- Both return the number of characters processed; negative value on failure.
+Detailed conversion specifications for xprintf pg 553-555 in book.
+C99 aspects pg 555-556
+examples for xprintf pg 556-558
+detailed conversion specifications for xscanf pg 559-562
+c99 aspects pg 562
+examples for xscanf pg 563-564
+
+Error Conditions:
+input errors can occur for three reasons:
+	1. end of file seen before input processing complete
+	2. read error - function could not read from stream
+	3. Match failure - data item in wrong format
+every stream has two indicators associated with it:
+	1. Error indicator
+	2. End-of-File indicator
+indicators are set on an appropriate error
+the following functions can be used to determine which indicator was set when an error occurs:
+	- int feof (FILE *stream)
+		returns non-zero value if end-of-file indicator set; zero otherwise
+	- int ferror (FILE *stream)
+		returns non-zero value if error indicator set; zero otherwise.
+	if an error occurs and neither is set, a match error has occured
+once an indicator has been set, it remains in that condition until reset
+	- void clearerr (FILE *stream)
+		- Clears all indicators.
+
+character I/O:
+	1. int purchar (intc)
+		- already discussed - only outputs to stdout
+		- on errer returns EOF
+	2. int fputc (int c, FILE *stream)
+		- file equivalent to putchar
+		- implemented as a function
+	3. int putc (int c, FILE *stream)
+		- as fputc
+		- often implemented as a macro.
+input equivalents to above:
+	1. int getchar (void)
+	2. int fgetc (FILE *stream)
+	3. int getc (FILE *stream)
+	- all return EOF on error, use feof and ferror
+	- should always use an int variable to receive returned value for proper testing of EOF
+undoing a get
+	- int ungetc (int c, FILE *stream)
+	- Puts c back in the input stream
+	- allows examination of next input character without having to remove it from the stream (permanently)
+	- only guaranteed to work for 1x in succession
+
+Line I/O:
+	1. int puts (const char *s)
+		- already discussed - prints a single line to stdout.
+		- on error returns eof
+	2. int fputs( const char *s, FILE *stream)
+		- file equivalent to puts
+		- does not automatically append a new line.
+Input equivalents to above:
+	1. char *gets(char *s)
+	2. int fgets (char *s, int n, FILE *stream)
+		- limits number of characters read to n -1 or halts on newline
+		- stores newline character if read
+		- appends null character to string
+		- returns first argument on success; null character on failure.
+
+Block I/O
+refers to transfer of potentially large data sets at one time
+output:
+	1. size_t fwrite (const void *ptr, size_t nmemb, FILE *stream)
+		- copies entire array to stream
+		- ptr is array's address
+		- size is size of an array element in bytes
+		- nmemb is the number of elements to write
+		- returns the number of elements written; on error this value will be less than nmemb
+input:
+	1. size_t fread (const void *ptr, size_t nmemb, FILE *stream)
+		- as fwrite
+
+File Positioning
+Note: The following funtions behave differently with text and binary files
+	- see text and/or c user manual
+programmer can reset file pointer when processing a file
+normal processing advances pointer sequentially during processing from current location
+	- pointer starts at file beginning (r and w modes) or at end (a modes)
+	1. int fseek (FILE *stream, long int offset, int whence)
+		- offset specifies how many bytes to move from whence
+		- whence specifies a location:
+			*SEEK_SET: file beginning
+			*SEEK_CUR: current position
+			*SEEK_END: file end
+		- Returns zero on success; non-zero otherwise
+		- for text files, offset must be zero; or whence set to SEEK_SET with offset to a value obtained by ftell(see below).
+	2. int ftell (FILE *stream)
+		- returns current file position; -1 on failure
+		- not recommended to do pointer arithmatic on values returned by ftell.
+	3. int fgetpos (FILE *stream, fpos_t pos)
+	4. int fsetpos (FILE *stream, const fpos_t *pos)
+		- Equivalents to fseek and ftell but for larger files
+		- returns zero on success; non-zero otherwise.
+		
+Since it's handy to be able to format strings, C provides formatting functions for strings comparable to printf and scaf.
+	1. int sprintf (char *s, const char *format, args)
+	2. int sscanf (char *s, const char *format, args)
+Both work exactly like their stream counterparts, except the result if stored in (or extracted frmo) string s.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

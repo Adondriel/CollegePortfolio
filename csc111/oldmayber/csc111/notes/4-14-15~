@@ -1,0 +1,87 @@
+In Previous implementations of list, stack and queue ADTs, size of object was limited by size of array being used to implement the ADT
+
+Using realloc can address the problem
+
+The Issue arises on inserts
+	- previously, if the list is full the element is not added and some kind of indication is made.
+	- now, can do that following:
+		1. try to realloc the array with additional storage using realloc
+		2. if NULL is returned the list is truly full(There is no room, cannot make array bigger)
+		3. otherwise, continue as usual.
+	- Several issues accompany this approach
+		1. By what amount do we increment the array size?
+		   (a) A fixed amount each time?
+		   (b) Doubling the size each time?
+		   (c) Some fixed percentage of the currently size?
+		2. When deleting elements from the list, should the array shrink if its size goes below some threshold?
+
+
+When using dynamically allocated data objects, the situation usually involves both allocating new objects and eliminating existing ones.
+
+The problem with deallocation is that the memory associated with the deallocated objects will not longer be accessible.
+consider:
+	int *p = malloc(sizeof(int));
+	int *q = malloc(sizeof(int));
+	...
+	p = q // memory is still allocated where p used to point to, but you no longer have a pointer that goes there.
+Some languages have built in mechanisms for collecting such lost storage
+	- Called garbage collectors
+	- C does not
+	- It is up to the programmer to manage dynamic memory usage.
+Function free is used to deallocate memory
+	- Syntax void free (void *p)
+	- semantics: Return memory referenced by p to the heap. p must reference dynamically allocated memory.
+	- in the above:
+		int *p = malloc(sizeof(int));
+		int *q = malloc(sizeof(int));
+		...
+		free(p); //p is now dangling.
+		p = q; //p is freed before assigning it to q, no more memory leak. p is no longer dangling
+A dangling pointer is one that doesnt point to anything
+	- in the above example, p is dangling after being freed, should not be referenced
+
+A linked list refers to a particular way in which a list ADT can be implemented
+	- We have looked at the list ADT as implemented using an array in which elements are stored sequentially
+	- a Linked List implementation does not require elements to be stored sequentially
+	- linked lists are most often implemented using dynamic memory allocation
+
+Basic data object is usually called a node
+	- Implemented as a struct with at least two members:
+	  1. One for the actual data
+	  2. One for a pointer to the element's successor
+	  3. and sometimes one for a pointer to the element's predecessor
+	- example:
+		struct node {
+		  int element;
+		  struct node *next;
+		};
+	- note that the struct is recursively defined
+		as a result, it cannot be typedef'd; it must be tagged
+The list itself can be represented as a simple pointer to a node.
+	- this representation can be typedef'd
+
+
+adding elements to the list:
+	- unlike with arrays, it's easiest to add new elements to the head of the list
+	- the steps:
+		1. allocate a new node
+		2. update the value in the new node
+		3. Set the pointer in the new node to the pointer stored in the list variable
+		4. Reassign the list variable pointer to the newly allocated node.
+		list pointer [-]->[][-]-> ... --->[][/]
+		allocate new node
+		copy list pointer into slot two.
+		make the list pointer point to new node first element
+the -> operator (structure pointer operator)
+	- Syntax: structure_ptr->member_name
+	- Semantics: (*structure_ptr).member_name
+	- works as an lvalue, can be assigned.
+
+Deleteing Elements from the list:
+	- The steps:
+		1. save the value of the pointer to the node being deleted
+		2. reassign the pointer of its predecessor to point to the deleted node's successor
+		3. Free the memory of the deleted node.
+	
+
+		   

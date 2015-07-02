@@ -1,0 +1,143 @@
+Pointers to pointers allow reassigning a pointer parameter to a new value
+	- remember that c passes arguments by value
+	- this means that when a pointer is passed as an argument, a copy is passed
+	- if the value of the parameter is changed, the result will not be what was expected
+consider:
+	void foo (..., node *p, ...)
+	{	
+	   ...
+	   p = malloc(sizeof(struct node));
+	   ...
+	}
+	
+	with
+	
+	node *ptr;
+	...
+	foo(..., ptr, ...);
+	...
+
+	- the steps in terms of the activation record:
+	right after call	
+		ptr -> node <-|
+			  foo(p)
+		
+	this sends a copy of the pointer to node
+	
+	void foo (..., node **p, ...)
+	this points to a pointer.
+	you must now pass the address of ptr to thefunction
+	foo(..., &ptr, ...)
+	
+	now, in the foo function the value of p, is pointing to ptr, rather than to node, allowing you to change the value(or address) that it points to.
+	
+
+functions can be passed as arguments to functions in much the same way as arrays
+	- the syntax for a function param:
+		return_type id(type_list) or
+		return_type(*id)(type_list)
+	- both are acceptable, but the second mroe clearly indicates that the parameter is a pointer
+	- when passing a function as a parameter, simply pass the name
+	- parens tell it that it is a pointer to a function.
+	- ex:
+		void foo(..., int (*f)(int, int), ...)
+		{
+			int x, y, z;
+			...
+			x = (*f)(y, z); //or x = f(y, z);
+			...
+		}
+
+		int larger (int a, int b)
+		{
+			if (a>b)
+				return a;
+			else
+				return b;
+		}
+
+		void main (void)
+		{
+			foo(..., &larger, ...);
+		}
+		
+typical applications:
+	1. Integration
+		- Have a function for integrating that accepts as a parameter the function to be integrated
+	2. Menu-driven processing
+		- Functions are stored in an array
+		- User selects a numeric menu option which is used as an index into the array of functions
+
+
+File I/O - Streams
+Stream is used to refer to any input source or output destination
+	- the terminology reflects the fact that data/bytes flow from the source to the destination
+A stream can be associated with any i/o device: the keyboard, screen printer, secondary storage, etc.
+	- our main convern with the file I/O
+stream functionality is provided by stdio.h
+A stream is accessed via a point to type FILE
+The stand streams:
+	1. stdin (stand input - the keyboard)
+	2. stdout (standard out - the screen)
+	3. stderr (standard error - the screen)
+I/O can be redirected from the command line using redirection operators:
+	- <: input redirection
+	- >: output redirection
+	- Syntax: command op stream
+	- example: ./a.out < myFile or ./a.out > output.txt
+		* input to a.out will be taken from file myFile instead of from the keyboard
+- indirection is limited to a single input and output stream
+
+File I/O - File Types:
+C recognizes two types of files:
+1. Text
+	- this is an ASCII file
+	- Human-Readable
+	- each byte represents an ascii characters
+	- usually broken into lines, each terminated by a special EOL character
+	- file may be terminated by an EOF character
+2. Binary
+	- not human readable
+	- data maintained in binary format
+	- usually more compact than the same file in txt format
+	- no EOL or EOF characters
+Programs must know file type before using.
+
+File I/O - Stream Operations
+1. Opening
+	- Stream must be opened before it can be used
+	- Syntax: FILE *fopen(const char *stream, const char *mode);
+	- stream specifies the stream to be opened, which may include at path
+	- mode specifies how the stream can be accessed.
+	- text Files:
+	mode	Desc
+	"r"	Open for reading
+	"w"	open or create for writing, discarding existing content
+	"a"	Open or create for appending at the end
+	"r+"	open for update (read or write)
+	"w+"	open for update (at start), discarding existing content
+	"a+"	open or create for update (at end)
+	-binary files:
+	mode	Desc
+	"rb"	open for reading
+	"wb" 	open or create for writing, discarding existing content
+	"ab"	open or create for appending at end
+	"r+b" or "rb+" open for update (read or write)
+	"w+b" or "wb+" open or create for update (at start), discarding existing content.
+	"a+b" or "ab+" open or create for update (at end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

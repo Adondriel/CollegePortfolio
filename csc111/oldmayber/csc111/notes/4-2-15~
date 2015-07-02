@@ -1,0 +1,46 @@
+Unions
+There is often a need for a data object to be able to represent values of differing types
+	- for example
+		a list is often used to hold many different kinds of things
+		stacks might be needed to hold numeric or character data
+		A library database needs to hold info on books, periodicals, media, etc.
+Consider the stack ADT that has been used as an example in the past
+	- in order to represent stacks that can hold ints or chars, we could use two different data types
+	- a second alternative would be to create a single datatype that has storage for all version that are allowable
+		example:
+			typedef struct{
+				int id;
+				int timeStamp;
+				int duration;
+				int charStack[SIZE];
+			} stackArray;
+	Variables of type stackArray could represent a stack of characters (using member intStack) or a stack of integers (using member charStack), but you would only want to use on or 		 the other for a given variable.
+	obvious waste of space.
+	
+a C union type is similar to a struct
+	- what sets them apart is that, while
+		a struct represents a composite value consisting of one or more distinct members
+		a union represents a single value consisting of exactly one distinct member
+		  the amount of memory allocated for a union is the amount needed for it largest member
+		  all members share the same memory, and only one occupies it at any one time.
+	-example
+		union u1 {
+		   int i;
+		   double x;
+		   int a[5];
+		} ex2;
+		one, or the other type.
+	as typedef:
+		typedef union {
+			blah;
+		} u1;
+
+declarations use the same syntax are structs:
+one issue remains: how does a program know what kind of value is stored in a union?
+	- the anwer is - it doesnt
+	- it is up to the programmer to include code for keeping track of what member is being used at any given time.
+	- for this reason, unions are usually incorporated into a struct
+	- the struct includes a member that is used to indicate the current member
+	- it is up to the programmer to insure that this flag is updated whenever the value of the union changes.
+this can be used to our advantage in creating a stack ADT(see examples online)
+

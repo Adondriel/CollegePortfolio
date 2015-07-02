@@ -1,0 +1,92 @@
+- The Software Development Life Cycle (SDLC) is a general process describing steps used to develop programs
+- Recommended steps:
+	1. Analyze
+		- Basic problem-solving - identifying what the problem is
+		- Generate program requirements/specifications:
+			- Id input and output
+	2. Design
+		- Identify program constructs and processing required to solve problem
+		- Designing algorithms
+	3. Implement
+		- Write code
+		- Compile
+		- Debug
+	4. Test
+		- Generate test cases
+		- Debug
+	5. Maintain
+		- Includes documentation and tweaking as needed
+	Analyze <--> Design <--> Implement <--> Test <--> Maintain
+	- Top-down desgi nis a strategy for designing programs
+	- it is based on the divide and conquer strategy
+	- The philosophy behind divide and conquer:
+		1. Break a problem into smaller sub problems
+		2. Solve each sub problem, breaking them up even more if needed
+		3. Combine the solutions of the sub problems
+		4. By combining the solutions to the sub problems you will have solved the original problem.
+	- The philosophy is that smaller problems are easier to solve than larger ones
+	- A tool used in top-down design is the Hierarchical Input Processing Output chart
+		- HIPO charts are a graphical means of displaying a top-down design
+		- The main problem is shown at the top
+		- The Sub problems it is broken into are listed below it, in order to be solved
+		- Sub sub problems are listed underneither these, etc
+		- Decomposition stops when you have a sub problem that is easy to solve.
+		- The subproblems at the very bottom of the chart (tree) are called leaves
+    	- Problem decompostion is read from top to bottom
+		- order of execution is left to right
+	- Flow chat is another tool for designing programs
+	- Graphical way of showing flow of control in a program
+		- Flow of control deals with the order in which statements are exectuted.
+	-Symbols used in flow charts:
+		rounded square = Terminal, parallelogram = IO, diamond = Decision,
+		square = Process, chocolate bar with wrapper = subprogram, circle = connector.
+
+	- Pseudocode
+		- Psudocode is a set of instructions for writing pseudocode
+		- there is no formal set of rules for writing pseudocode
+		- often used as a step between flow charts and actual code, or in place of flow carts
+		- usually do not use variable names - just english words - for values
+		- many of the programming exercises in the text are pseudocode
+	- Scope refers to parts of a program in which an indentifier can be accessed/seen.
+		- there are several types of scope:
+			1. block level scope:
+				- Applies to indentifiers declared within a block
+				- these variables are referred to as a local to the block
+				- their scope is the body of the block
+				- they can only be accessed from within the body of the block
+				- formal parameters have block-level scope within the body of the function
+			2. File scope
+				- Applies to indentifiers declared outside of any functions
+				- such variables are called external(often global) variables
+				- their scope is the entire file
+				- issues regarding global variables:
+					- useful when many functions need access to the same data
+					- if make a change to a global variable (e.g., data type), need to check all usages thoughout the 
+						program for consistency
+					- makes debugging more difficult
+					- limits reusability.
+				- Scope rules
+					- Scope rules specify the rules used to determine the scope of indentifiers
+					- C uses static scope rules
+						- These are based on the one-way mirror paradigm
+						- Imagine a box drawn around every block and every function that includes everything except the function name
+						- compiler determines scope at compile time, looking for the closest declartion going from inside to out. 
+ 						- like one way mirrors, the compiler can look from inside of a box [to determine scope?]
+	- Lifetime refers to the time during which and identifier is located in stoarge
+		- There are several types of lifetimes associated with the type of storage allocation associated with a variable
+		1. automatic storage allocation
+			- this is the default for local variables
+				- their lifetime start when the enclosing block is allocated and end when the enclosing block is deallocated
+		2. Static storage allocation
+			- Variables with static allocation have persistent storeage, regardless of scope type
+			- by default, external variables are static
+			- to declare static, preface the type with static.
+			- A static local variable will retain it's value over multiple calls of a function
+			- example:
+				int getNext()
+				{
+					static int nextVal = 0;
+					
+					return ++nextVal;
+				}
+				nextVal is only visible to getNext(), but the value is in perm storage.

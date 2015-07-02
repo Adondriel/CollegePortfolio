@@ -1,0 +1,177 @@
+
+
+
+	- A Point variable stores the address of a data object
+	- Declaration syntax: type *id;
+	- while addresses are integers, do not use int data type as it may not be large enough to hold all values in the address space
+	- to assign a meaningful value to a pointer variable, use the address of operator:	&
+		- Syntax: &id
+		- Semantics: Returns the address of the id
+		- Example:
+			int i;
+			int *p;
+			
+			p = &i;
+		- p[__] -> i[__]
+			The value of p is the address of i.
+	- Pointer variables can be initialized like any other variables:
+		int i;
+		int *p = &i;
+	- To access the value stored in the address referenced by a pointer variable, use the indirection operator: *
+		- Syntax: *pointer_id
+		- Semantics: Returns the value stored at the address referenced by pointer_id
+		- Example:
+			int i, *p;
+			
+			i = 12;
+			p = &i;
+			printf("%d %d\n", *p, i);
+			*p = 3;
+			printf("%d %d\n", *p, i);
+
+			output:
+			12 12
+			3 3
+			
+		- In the above, i and *p are aliases
+		- Be careful using aliases - can lead to programs that are hard to debug because 
+		  assigning one variable will affect the value of all aliases of that variable.
+ 		- Pointers can be assigned to each other:
+			int i, *p, *q;
+			i = 12;
+			p = &i;
+			q = p;
+			print them all out,
+			12 12 12
+		
+		- dont do this:
+			- should not assign a literal to a pointer variable:
+				int *p;
+				p = 10;
+			- this assigns p to the memory address of 10, what is there? No one knows.
+			- Like any other variable, pointer variables should be initialized before usage:
+				int i = 10;
+				int *p, *q;
+				i = *p;
+				*q = i;
+			- program will probably crash if you do this.
+	- Functions can take pointers as parameters
+		Syntax:
+			- Definition header: type id( ... type * id ...)
+			- Declaration header: type id(... type * ...)
+		- example:
+			void swap(int *i, int *j)
+			{
+				int temp;
+				
+				temp = *i;
+				*i = *j;
+				*j = temp;
+			}
+			test()
+			{
+				int x = 10;
+				int y = 20;
+				swap(&x, &y);
+				// *i -> x
+				// *j -> y
+				// swaps the value outside of the function. x = 20, y = 10.
+			}
+	- Passing a pointer to a function
+		- can pass
+			- a pointer variabl, or
+			- a reference using the address of operator.
+		- example:
+			int x = 10;
+			int y = 20;
+			int *p = &x;
+			
+			swap(p, &y);
+
+
+	- advantages to using pointers as parameters:
+		1. Enables pass by reference.
+			- C functions only allow pass by value
+			- This restricts functions to a single returned value
+			- by passing pointers, functions can return multiple values through the referenced parameters.
+			- general rule of thumb:
+				- if a function returns a single value, use a non-void function and return the value using the return mechanism
+				- if a function returns no values, use a void function
+				- if a function returns multiple values use a void function and 
+				  pass the arguments that represent the returned values as pointers to variables.
+		2. Efficiency
+			- Passing a pointer is often more efficient than copying a value
+			- When used for efficiency - the value of the argument is not intended 
+              to be changed by the function - declare the parameter to be a constant:
+				void foo(const int *p)
+					{
+						...
+					}
+	- This enabled and improved implementation for the stack and queue ADTs discussed earlier.
+		- Original stack code had push print and overflow message if the stack was full, and had pop print and underflow message if the stack was empty.
+		- this is ok for the user, but worthless for the programatic detection of problems
+		- the following uses a pointer to an error flag that can be set in the functions and checked by the caller:
+			void push(int i, stack stk, int *errFlag)
+			{
+				if (stackFull(stk))
+				{
+					*errFlag = 1;
+				}			
+				else
+				{
+					*errFlag = 0;
+					stk[0]++;
+					stk[stk[0]] = i;
+				}
+			}
+			
+
+
+			int pop(stack stk, int *errFlag)
+			{
+				int top;
+				
+				if (stackEmpty(stk))
+				{
+					*errFlag = 2;
+					return -1;
+				}else
+				{
+					*errFlag = 0;
+					do stuff;		 
+			}
+
+
+
+
+	- Functions can return pointers:
+		int *maxOfThree(int *x, int *y, int *z)
+		{
+			if ((*x > y ) && (*x > *z)){
+				return x;
+			}
+			if ((*y > *x) && (*y > *z)){
+				return y;
+			}
+			return z;
+		}
+
+	a = 5;
+	b = 15;
+	c = 10;
+
+	max = maxOfThree(&a, &b, &c);
+	
+	x -> a
+    y -> b
+    z -> c
+
+
+
+ 
+
+
+
+
+
+

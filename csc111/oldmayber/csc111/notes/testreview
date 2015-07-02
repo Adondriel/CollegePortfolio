@@ -1,0 +1,6 @@
+know how to declare pointer variables, how to assign pointer variables, know how to assign values to the location of the pointer variable. 
+know how to pass addresses
+know that an array name can be used as a pointer
+you can use an int pointer to an array, and use it the same as an array.
+pointer arithmatic
+

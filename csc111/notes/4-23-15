@@ -1,0 +1,83 @@
+Debugger - Basics
+These notes describe the basics of the GNU debugger -gdb
+It has the same functionality you are familiar with in Eclipse, except it's run from the command line
+Before gdb can be used, you must have the compiler gereate info for the debugger to use
+	- to compile for debugging: gcc -g compile_args
+to run gdb:
+	- type gdb
+		this just starts gdb
+		to select a file to debug, us file file_nam
+	- type gdb file_name
+		this both starts gdb and selects a file
+once a file is selected, the following commands are useful
+	- run
+		starts debugging the selected program.
+	- help
+		lists generic instructions
+	- help all
+		lists all the gdb cmds
+	- help command
+		provides info on specified command
+	- list [linenum|first, last]
+		displays lines centered on the current line
+		optional line num indicates a single line to display
+		optional first, last indicate a range of lines to display
+	- break line_number
+		sets a break point at the specifed line number
+		when execution reaches this line, execution halts and waits for a user command
+	- next [count]
+		executes the current line and stops at the next, staying in the current scope
+		the optional count indicates how many lines to execute
+	- step [count]
+		executes the current line and stop at the next, entering into functions if the statement is a function call.
+		optional count.
+	- continue
+		continue execution
+	- info breakpoints
+		displays the breakpoints currently set
+		breakpoints are numbered
+	- delete breakpoints [num]
+		queries user if all breakpoints should be deleted
+		if the optional num is included, that breakpoint is deleted
+	- print var_name
+		displays the value of var_name
+		must be in the scope of the variable to display it's value
+	- set variable /var_name/ = expr
+		assigns expr to var_name
+	- watch var_name
+		sets a watch point on var_name
+		must be in scope of the variable to set a watch o nit
+		stops execution whenever the value of var_name changes and displays the old and new values
+		watchpoints expire when execution leaves scope of variable.
+	- info watchpoints
+		displays the watch points currently set
+	- quit
+		exits gdb
+	- run
+		see above
+
+Tracing functions
+	- You might want to trace how the program reached a particular point in a series of function calls
+	- The info associated with a function call is termed a frame (think activation record)
+	- Frames are maintained in a stack, the most recently called on top; main at the bottom
+	- Frames are numbered
+		frame zero is the current frame
+		its caller is frame one
+		etc
+	- the following commands can be used to retrieve frame info.
+		backtrace [num]
+			dispalys a trace of all the frames on the stack
+		frame [num]
+			prints brief description of the current frame
+		info frame
+			gives you very detailed information about the currently selected frame.
+		info locals
+			prints the local variables of the currently selected frame
+		info args
+			prints the arguments of the currently selected frame
+		up [num]
+			moves num frames up the stack
+		down [num]
+			moves num frames down the stack
+		
+		
